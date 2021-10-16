@@ -11,7 +11,7 @@ Row name | Description | Type
 No | Data number | integer
 Date | Recorded date | string (YYYY-MM-DD-H-m-ss-msec)
 Room | Ambient temperature[Celcius] | float
-P[X] | Cell temperature[Celcius], X=0~15 for 4x4 sensor | float
+P[X] | Cell temperature[Celcius / 10], X=0~15 for 4x4 sensor | float
 
 **Example**
 
