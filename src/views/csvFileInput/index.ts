@@ -5,6 +5,15 @@ class CsvFileInput implements ICsvFileInput {
     this.addFileEvent("inputCsv", (file) => {
       handler(file);
     });
+
+    // load local file
+    const sampleFile = "sample.csv";
+    fetch(sampleFile)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const file = new File([blob], sampleFile, { type: "text/csv" });
+        handler(file);
+      });
   }
 
   // eslint-disable-next-line class-methods-use-this
