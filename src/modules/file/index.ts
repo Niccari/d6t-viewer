@@ -1,9 +1,10 @@
 import { IFileLoader } from "./interface";
 
-export class FileLoader implements IFileLoader {
-  loadAsync(file: File, type: string): Promise<string | ArrayBuffer> {
+class FileLoader implements IFileLoader {
+  // eslint-disable-next-line class-methods-use-this
+  public loadAsync(file: File, type: string): Promise<string | ArrayBuffer> {
     if (file.type !== type) {
-      return Promise.reject("Invalid file type");
+      return Promise.reject(new Error("Invalid file type"));
     }
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -19,3 +20,5 @@ export class FileLoader implements IFileLoader {
     });
   }
 }
+
+export default FileLoader;

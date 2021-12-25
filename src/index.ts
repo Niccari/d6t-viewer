@@ -1,3 +1,4 @@
-import container from "./container";
+import Container from "./container";
 
-export const { controller } = container;
+// eslint-disable-next-line no-new
+new Container();

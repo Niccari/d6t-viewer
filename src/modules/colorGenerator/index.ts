@@ -19,15 +19,18 @@ class ColorGenerator implements IColorGenerator {
     { position: this.resolution - 1, red: 255, green: 255, blue: 255 },
   ];
 
-  private _colorToHex = (color: number) => {
+  // eslint-disable-next-line class-methods-use-this
+  private colorToHex = (color: number) => {
     const hex = Math.round(color).toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+    return hex.length === 1 ? `0${hex}` : hex;
   };
 
-  constructor(pattern: ColorPattern) {
+  public constructor(pattern: ColorPattern) {
     const gradient: ColorGradientItem[] = (() => {
       switch (pattern) {
         case ColorPattern.Heat:
+          return this.gradientHeat;
+        default:
           return this.gradientHeat;
       }
     })();
@@ -35,20 +38,21 @@ class ColorGenerator implements IColorGenerator {
     let endIndex = 1;
     let start = gradient[0];
     let end = gradient[1];
-    for (let i = 0; i < this.resolution; i++) {
+    for (let i = 0; i < this.resolution; i += 1) {
       const ratio = (i - start.position) / (end.position - start.position);
       const red = start.red + ratio * (end.red - start.red);
       const green = start.green + ratio * (end.green - start.green);
       const blue = start.blue + ratio * (end.blue - start.blue);
       this.colorTable.push({ position: i, red, green, blue });
-      if (end.position == i) {
+      if (end.position === i) {
         start = end;
-        end = gradient[++endIndex];
+        endIndex += 1;
+        end = gradient[endIndex];
       }
     }
   }
 
-  getColor(position: number): string {
+  public getColor(position: number): string {
     if (position < 0 || position > 1) {
       throw new Error("position must be in 0 <= position <= 1");
     }
@@ -66,7 +70,7 @@ class ColorGenerator implements IColorGenerator {
         beforeWeight * this.colorTable[beforeIndex].blue + afterWeight * this.colorTable[afterIndex].blue
       ),
     };
-    return "#" + this._colorToHex(color.red) + this._colorToHex(color.green) + this._colorToHex(color.blue);
+    return `#${this.colorToHex(color.red)}${this.colorToHex(color.green)}${this.colorToHex(color.blue)}`;
   }
 }
 
