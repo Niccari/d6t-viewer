@@ -6,10 +6,11 @@ import { IThermalDistributionView } from "./interface";
 class ThermalDistributionView implements IThermalDistributionView {
   private readonly colorGenerator: IColorGenerator;
 
-  constructor(colorGenerator: IColorGenerator) {
+  public constructor(colorGenerator: IColorGenerator) {
     this.colorGenerator = colorGenerator;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private getCanvas(): HTMLCanvasElement {
     const canvas = document.getElementById("thermalDistribution");
     if (!canvas) {
@@ -31,6 +32,7 @@ class ThermalDistributionView implements IThermalDistributionView {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private drawText(context: CanvasRenderingContext2D, text: string, x: number, y: number) {
     context.font = "64px bold sans-serif";
     context.strokeStyle = "#000000";
@@ -43,11 +45,12 @@ class ThermalDistributionView implements IThermalDistributionView {
     context.fillText(text, x, y);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private setColorPositionRange(min: number, max: number): (value: number) => number {
     return (value) => (value - min) / (max - min);
   }
 
-  draw(
+  public draw(
     frameNo: number,
     frame: ThermalDistributionFrame,
     numRows: number,
@@ -68,18 +71,18 @@ class ThermalDistributionView implements IThermalDistributionView {
 
     this.drawText(
       context,
-      "#" + frameNo + ", 室温" + frame.ambientCelcius.toFixed(1) + "°C, " + frame.date.toLocaleString(),
+      `#${frameNo}, 室温${frame.ambientCelcius.toFixed(1)}°C, ${frame.date.toLocaleString()}`,
       10,
       80
     );
-    for (let y = 0; y < numRows; y++) {
-      for (let x = 0; x < numRows; x++) {
+    for (let y = 0; y < numRows; y += 1) {
+      for (let x = 0; x < numRows; x += 1) {
         const cellCelcius = frame.cells[x + y * numRows];
         context.fillStyle = this.colorGenerator.getColor(calcColorPosition(cellCelcius));
         context.fillRect(x * cellWidth + cellsX, y * cellHeight + cellsY, cellWidth, cellHeight);
         this.drawText(
           context,
-          cellCelcius.toFixed(1) + "°C",
+          `${cellCelcius.toFixed(1)}°C`,
           x * cellWidth + cellsX + cellWidth / 4,
           y * cellHeight + cellsY + cellHeight / 2
         );
@@ -100,7 +103,7 @@ class ThermalDistributionView implements IThermalDistributionView {
     const numColorbarCells = 4;
 
     const gradient = context.createLinearGradient(cellsX, 0, canvasWidth, cellHeight / 3);
-    for (let stop = 0; stop <= numColorbarCells; stop++) {
+    for (let stop = 0; stop <= numColorbarCells; stop += 1) {
       const offset = stop / numColorbarCells;
       gradient.addColorStop(offset, this.colorGenerator.getColor(offset));
     }

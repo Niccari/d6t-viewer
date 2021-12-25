@@ -1,13 +1,22 @@
-import { controller } from "../../";
 import { ICsvFileInput } from "./interface";
 
-export class CsvFileInput implements ICsvFileInput {
-  constructor() {
+class CsvFileInput implements ICsvFileInput {
+  public addFileHandler(handler: (_: File) => void) {
     this.addFileEvent("inputCsv", (file) => {
-      controller.startVisualization(file);
+      handler(file);
     });
+
+    // load local file
+    const sampleFile = "sample.csv";
+    fetch(sampleFile)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const file = new File([blob], sampleFile, { type: "text/csv" });
+        handler(file);
+      });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private addFileEvent(id: string, onFileRetrieved: (file: File) => void) {
     const tag = document.getElementById(id);
     if (!tag) {
@@ -25,3 +34,5 @@ export class CsvFileInput implements ICsvFileInput {
     tag.addEventListener("dragstart", retrieveFile);
   }
 }
+
+export default CsvFileInput;

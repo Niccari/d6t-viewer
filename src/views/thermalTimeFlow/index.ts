@@ -12,10 +12,11 @@ class ThermalTimeFlowView implements IThermalTimeFlowView {
   private readonly colorGenerator: IColorGenerator;
   private readonly scanmapRasterX = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-  constructor(colorGenerator: IColorGenerator) {
+  public constructor(colorGenerator: IColorGenerator) {
     this.colorGenerator = colorGenerator;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private getCanvas(): HTMLCanvasElement {
     const canvas = document.getElementById("thermalTimeFlow");
     if (!canvas) {
@@ -37,10 +38,12 @@ class ThermalTimeFlowView implements IThermalTimeFlowView {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private setColorPositionRange(min: number, max: number): (value: number) => number {
     return (value) => (value - min) / (max - min);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private measureFrameRectangleSize(numRows: number, frameLength: number, drawInfo: CanvasInfo): FrameRectangleSize {
     return {
       width: drawInfo.canvasWidth / (numRows ** 2 + 1 + 1), // includes ambient temperature and padding
@@ -48,7 +51,12 @@ class ThermalTimeFlowView implements IThermalTimeFlowView {
     };
   }
 
-  drawTimeFlow(distribution: ThermalDistribution, numRows: number, minCelcius: number, maxCelcius: number): void {
+  public drawTimeFlow(
+    distribution: ThermalDistribution,
+    numRows: number,
+    minCelcius: number,
+    maxCelcius: number
+  ): void {
     const drawInfo = this.getCanvasInfo();
     const { context } = drawInfo;
 
@@ -57,21 +65,21 @@ class ThermalTimeFlowView implements IThermalTimeFlowView {
     const map = this.scanmapRasterX;
     const calcColorPosition = this.setColorPositionRange(minCelcius, maxCelcius);
     context.fillStyle = "#000";
-    for (let y = 0; y < distribution.frames.length; y++) {
+    for (let y = 0; y < distribution.frames.length; y += 1) {
       const frame = distribution.frames[y];
       context.fillStyle = this.colorGenerator.getColor(calcColorPosition(frame.ambientCelcius));
       context.fillRect(0, y * height, width, height);
 
       context.fillStyle = "#333333";
       context.fillRect(width, y * height, width, height);
-      for (let x = 0; x < numRows ** 2; x++) {
+      for (let x = 0; x < numRows ** 2; x += 1) {
         context.fillStyle = this.colorGenerator.getColor(calcColorPosition(frame.cells[map[x]]));
         context.fillRect(width * (2 + x), y * height, width, height);
       }
     }
   }
 
-  drawCurrentFrame(frameNo: number, numRows: number, frameLength: number): void {
+  public drawCurrentFrame(frameNo: number, numRows: number, frameLength: number): void {
     const drawInfo = this.getCanvasInfo();
     const { context } = drawInfo;
     const { width, height } = this.measureFrameRectangleSize(numRows, frameLength, drawInfo);

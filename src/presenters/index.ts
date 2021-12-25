@@ -3,15 +3,16 @@ import { IThermalDistributionView } from "../views/thermalDistribution/interface
 import { IThermalTimeFlowView } from "../views/thermalTimeFlow/interface";
 import { IPresenter } from "./interface";
 
-export class Presenter implements IPresenter {
+class Presenter implements IPresenter {
   private thermalDistributionView: IThermalDistributionView;
   private thermalTimeFlowView: IThermalTimeFlowView;
-  constructor(thermalDistributionView: IThermalDistributionView, thermalTimeFlowView: IThermalTimeFlowView) {
+
+  public constructor(thermalDistributionView: IThermalDistributionView, thermalTimeFlowView: IThermalTimeFlowView) {
     this.thermalDistributionView = thermalDistributionView;
     this.thermalTimeFlowView = thermalTimeFlowView;
   }
 
-  notifyDataChange(
+  public notifyDataChange(
     frameNo: number,
     numRows: number,
     thermalDistribution: ThermalDistribution,
@@ -24,3 +25,5 @@ export class Presenter implements IPresenter {
     this.thermalTimeFlowView.drawCurrentFrame(frameNo, numRows, thermalDistribution.frames.length);
   }
 }
+
+export default Presenter;

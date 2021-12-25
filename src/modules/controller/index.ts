@@ -2,17 +2,17 @@ import { IPresenter } from "../../presenters/interface";
 import { IThermalDistributionProvider } from "../thermalDistributionProvider/interface";
 import { IController } from "./interface";
 
-export class Controller implements IController {
+class Controller implements IController {
   private intervalId: NodeJS.Timer | undefined = undefined;
   private thermalDistributionProvider: IThermalDistributionProvider;
   private presenter: IPresenter;
 
-  constructor(thermalDistributionProvider: IThermalDistributionProvider, presenter: IPresenter) {
+  public constructor(thermalDistributionProvider: IThermalDistributionProvider, presenter: IPresenter) {
     this.thermalDistributionProvider = thermalDistributionProvider;
     this.presenter = presenter;
   }
 
-  async startVisualization(file: File): Promise<void> {
+  public async startVisualization(file: File): Promise<void> {
     await this.thermalDistributionProvider.load(file);
 
     if (this.intervalId) {
@@ -27,10 +27,12 @@ export class Controller implements IController {
 
       this.presenter.notifyDataChange(frameNo, numRows, thermalDistribution, minCelcius, maxCelcius);
 
-      frameNo++;
+      frameNo += 1;
       if (frameNo >= thermalDistribution.frames.length) {
         frameNo = 0;
       }
     }, 250);
   }
 }
+
+export default Controller;

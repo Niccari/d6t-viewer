@@ -2,11 +2,11 @@ import { ThermalDistribution, ThermalDistributionFrame } from "../../models/ther
 import { ICsvLoader } from "../csvLoader/interface";
 import { IThermalDistributionProvider } from "./interface";
 
-export class ThermalDistributionProvider implements IThermalDistributionProvider {
+class ThermalDistributionProvider implements IThermalDistributionProvider {
   private readonly csvLoader: ICsvLoader;
   private readonly thermalDistribution: ThermalDistribution;
 
-  constructor(csvLoader: ICsvLoader) {
+  public constructor(csvLoader: ICsvLoader) {
     this.csvLoader = csvLoader;
     this.thermalDistribution = {
       numRows: 0,
@@ -26,35 +26,36 @@ export class ThermalDistributionProvider implements IThermalDistributionProvider
     return this.thermalDistribution;
   }
 
-  getByFrame(imageNo: number): ThermalDistributionFrame {
+  public getByFrame(imageNo: number): ThermalDistributionFrame {
     return this.getThermalDistribution().frames[imageNo];
   }
 
-  getNumRows(): number {
+  public getNumRows(): number {
     return this.getThermalDistribution().numRows;
   }
 
-  getAll(): ThermalDistribution {
+  public getAll(): ThermalDistribution {
     return this.getThermalDistribution();
   }
 
-  getAmbientCelciusAll(): number[] {
+  public getAmbientCelciusAll(): number[] {
     return this.getThermalDistribution().frames.map((t) => t.ambientCelcius);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private parseCustomDate(str: string): Date {
     // 本来 Date.parse などを使う方がよいが、データ互換性のためパーサを実装
     const split = str.split("-");
-    const year = parseInt(split[0]);
-    const month = parseInt(split[1]) - 1;
-    const day = parseInt(split[2]);
-    const hour = parseInt(split[3]);
-    const minutes = parseInt(split[4]);
-    const seconds = parseInt(split[5]);
+    const year = parseInt(split[0], 10);
+    const month = parseInt(split[1], 10) - 1;
+    const day = parseInt(split[2], 10);
+    const hour = parseInt(split[3], 10);
+    const minutes = parseInt(split[4], 10);
+    const seconds = parseInt(split[5], 10);
     return new Date(year, month, day, hour, minutes, seconds);
   }
 
-  async load(file: File): Promise<void> {
+  public async load(file: File): Promise<void> {
     const csvValues = await this.csvLoader.load(file);
 
     const header: string[] = csvValues[0];
@@ -63,11 +64,11 @@ export class ThermalDistributionProvider implements IThermalDistributionProvider
 
     const numCells = header.length - 4;
     if (numCells !== 16 && numCells !== 64) {
-      return Promise.reject("The number of cells should be equal to 16 or 64. actual:" + numCells);
+      return Promise.reject(new Error(`The number of cells should be equal to 16 or 64. actual:${numCells}`));
     }
 
-    for (let i = 0; i < numCells; i++) {
-      headerTypes.push("P[" + i + "]");
+    for (let i = 0; i < numCells; i += 1) {
+      headerTypes.push(`P[${i}]`);
     }
     const rowNumbers: number[] = headerTypes.map((key) => {
       return header.findIndex((h) => h === key);
@@ -86,5 +87,8 @@ export class ThermalDistributionProvider implements IThermalDistributionProvider
     });
 
     this.setThermalDistribution({ numRows, frames });
+    return Promise.resolve();
   }
 }
+
+export default ThermalDistributionProvider;
