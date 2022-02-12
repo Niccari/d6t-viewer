@@ -62,16 +62,22 @@
 </head>
 <body>
   <h3>D6T MEMSセンサ データ可視化ソフト ver 0.1</h3>
-  <div>
-    <a href="https://www.omron.co.jp/ecb/product-detail?partNumber=D6T" target="_blank" rel="noopener noreferrer">D6T MEMSセンサ</a>から取得した温度分布CSVデータを可視化するためのツールです(センサとの接続については別途ソフト/ハードの開発が必要です)。
-  </div>
-  <div class="inputArea">
-    <label class="inputLabel"><a href="sampleData.zip">サンプルデータ</a>から、温度分布ファイル(*.csv)を選択してください</label>
-    <input type="file" id="inputCsv" class="dragArea">
-  </div>
-  <div class="visualizationArea">
-    <canvas id="thermalDistribution" class="thermalDistribution" width="2000" height="2000"></canvas>
-    <canvas id="thermalTimeFlow" class="thermalTimeFlow" width="1000" height="2000"></canvas>
+  <noscript>
+    <style type="text/css">.app { display: none; }</style>
+    <p>このソフトを利用する際は、JavaScriptを有効にするか、JavaScriptをサポートしているブラウザに切り替えてください。</p>
+  </noscript>
+  <div class="app">
+    <div>
+      <a href="https://www.omron.co.jp/ecb/product-detail?partNumber=D6T" target="_blank" rel="noopener noreferrer">D6T MEMSセンサ</a>から取得した温度分布CSVデータを可視化するためのツールです(センサとの接続については別途ソフト/ハードの開発が必要です)。
+    </div>
+    <div class="inputArea">
+      <label class="inputLabel"><a href="sampleData.zip">サンプルデータ</a>から、温度分布ファイル(*.csv)を選択してください</label>
+      <input type="file" id="inputCsv" class="dragArea">
+    </div>
+    <div class="visualizationArea">
+      <canvas id="thermalDistribution" class="thermalDistribution" width="2000" height="2000"></canvas>
+      <canvas id="thermalTimeFlow" class="thermalTimeFlow" width="1000" height="2000"></canvas>
+    </div>
   </div>
   </body>
 </html>
