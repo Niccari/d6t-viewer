@@ -17,7 +17,7 @@ class Container {
     // modules
     const fileLoader = new FileLoader();
     const csvLoader = new CsvLoader(fileLoader);
-    const thermalDistributionProvider = new ThermalDistributionProvider(csvLoader);
+    const thermalDistributionProvider = new ThermalDistributionProvider();
     const colorGenerator = new ColorGenerator(ColorPattern.Heat);
 
     // views
@@ -28,7 +28,7 @@ class Container {
     const thermalTimeFlowView = new ThermalTimeFlowView(colorGenerator);
     const presenter = new Presenter(thermalDistributionView, thermalTimeFlowView);
 
-    this.controller = new Controller(thermalDistributionProvider, presenter);
+    this.controller = new Controller(thermalDistributionProvider, presenter, csvLoader);
   }
 }
 

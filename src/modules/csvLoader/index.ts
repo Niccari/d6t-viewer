@@ -23,7 +23,10 @@ class CsvLoader implements ICsvLoader {
 
   // eslint-disable-next-line class-methods-use-this
   private parse(buffer: string): string[][] {
-    return buffer.split("\n").map((row) => row.split(","));
+    return buffer
+      .split("\n")
+      .slice(0, -1)
+      .map((row) => row.split(",").slice(0, -1));
   }
 }
 
