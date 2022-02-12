@@ -1,13 +1,10 @@
 import { ThermalDistribution, ThermalDistributionFrame } from "../../models/thermalDistribution";
-import { ICsvLoader } from "../csvLoader/interface";
 import { IThermalDistributionProvider } from "./interface";
 
 class ThermalDistributionProvider implements IThermalDistributionProvider {
-  private readonly csvLoader: ICsvLoader;
   private readonly thermalDistribution: ThermalDistribution;
 
-  public constructor(csvLoader: ICsvLoader) {
-    this.csvLoader = csvLoader;
+  public constructor() {
     this.thermalDistribution = {
       numRows: 0,
       frames: [],
@@ -55,14 +52,12 @@ class ThermalDistributionProvider implements IThermalDistributionProvider {
     return new Date(year, month, day, hour, minutes, seconds);
   }
 
-  public async load(file: File): Promise<void> {
-    const csvValues = await this.csvLoader.load(file);
-
+  public async load(csvValues: string[][]): Promise<void> {
     const header: string[] = csvValues[0];
 
     const headerTypes: string[] = ["Date", "Room"];
 
-    const numCells = header.length - 4;
+    const numCells = header.length - 3;
     if (numCells !== 16 && numCells !== 64) {
       return Promise.reject(new Error(`The number of cells should be equal to 16 or 64. actual:${numCells}`));
     }
@@ -75,7 +70,7 @@ class ThermalDistributionProvider implements IThermalDistributionProvider {
     });
 
     const numRows = Math.round(Math.sqrt(numCells));
-    const body = csvValues.slice(1, -1);
+    const body = csvValues.slice(1);
     const frames: ThermalDistributionFrame[] = body.map((b) => {
       const cellRowNumbers = rowNumbers.slice(2);
       const cells = cellRowNumbers.map((n) => parseFloat(b[n]));
